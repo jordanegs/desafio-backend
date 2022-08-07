@@ -24,50 +24,59 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Documentación de uso.
 
-## Installation
+## Instalación
+
+Instalar [AWS CLI](https://aws.amazon.com/es/cli/) y luego:
 
 ```bash
+# Configurar una cuenta de AWS y configure sus credenciales:
+$ aws configure
+# Instalación de Serverless
+$ npm install -g serverless
+# Instalando dependencias
 $ npm install
 ```
 
-## Running the app
-
+## Coniguración de AWS
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+# Configurar una cuenta de AWS y configure sus credenciales:
+$ aws configure
 ```
 
-## Test
+
+## Ejecutar Serverless
 
 ```bash
-# unit tests
+# Ejecutar en local, DynamoDB en local
+$ npm run build && serverless offline start
+```
+![My Image](capturas/ejecutando_local.png)
+
+
+```bash
+# Subir a producción
+$ npm run build && serverless deploy
+```
+![My Image](capturas/ejecutando_prod.png)
+
+
+## Ejecutar Documentación en Swagger
+
+```bash
+# Levantar documentación en el puerto 4000
+$ npx ts-node src/swagger.ts
+```
+![My Image](capturas/ejecutando_swagger.png)
+
+Luego ver documentación en: http://localhost:4000/api
+
+![My Image](capturas/swagger.png)
+
+## Pruebas unitarias
+Para ejecutar pruebas sin problemas debe estar corriendo en local el Serverless
+```bash
 $ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+![My Image](capturas/pruebas_unitarias.png)
