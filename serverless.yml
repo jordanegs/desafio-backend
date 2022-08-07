@@ -1,0 +1,87 @@
+service: desafio-backend-zoluxiones
+frameworkVersion: '3'
+
+plugins:
+  - serverless-plugin-optimize
+  - serverless-offline
+  - serverless-dynamodb-local
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: us-west-2
+
+  environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
+    NODE_OPTIONS: --enable-source-maps --stack-trace-limit=1000
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource:
+        - arn:aws:dynamodb:us-west-2:181736439534:table/PersonasTable
+
+package:
+  exclude:
+    - .git/**
+    - .idea/**
+    - src/**
+    - test/**
+    - e2e/**
+    - README.md
+
+functions:
+  app:
+    handler: dist/index.handler
+    events:
+      - http:
+          method: any
+          path: /{any+}
+          cors: true
+
+custom:
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+    exclude: aws-sdk
+    target: node14
+    define: 'require.resolve: undefined'
+    platform: node
+    concurrency: 10
+
+  dynamodb:
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+
+    stages: dev
+
+resources:
+  Resources:
+    TodosTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: PersonasTable
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: Id
+            AttributeType: S
+
+          - AttributeName: Url
+            AttributeType: S
+
+        KeySchema:
+          - AttributeName: Id
+            KeyType: HASH
+
+        GlobalSecondaryIndexes:
+          - IndexName: UrlIndex
+            KeySchema:
+              - AttributeName: Url
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+
